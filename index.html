@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>S. Edwards | Punkenness and Goth Girl</title>
+<meta name="description" content="Punkenness and Goth Girl, coming-of-age novels with goths, punks and rebels, by S. Edwards.">
+<meta property="og:title" content="A homepage for S. Edwards, made by Sparsh Saini">
+<meta property="og:description" content="A homepage idea for S. Edwards and Punkenness, made by Sparsh Saini. Not the official site.">
+<meta property="og:image" content="https://sparshsainied-prog.github.io/sedwards/img/og.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23ff2fd2'/><rect x='5' y='6' width='22' height='20' fill='%23efe6d2' stroke='%23141014' stroke-width='2' transform='rotate(-6 16 16)'/><text x='16' y='23' font-family='Georgia' font-size='17' font-weight='700' text-anchor='middle' fill='%23141014'>S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik+Dirt&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/cover-base.jpg" fetchpriority="high">
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* Colours are picked off the Punkenness cover: the hot pink wall, the red under it, the
+   spray-can cyan, the starburst yellow, the cream of the cut-out letters, the black ink. */
+:root {
+  --ink: #141014;
+  --ink-2: #221b22;
+  --pink: #ff2fd2;
+  --red: #e5231e;
+  --cyan: #3fd8d4;
+  --yellow: #ffd31c;
+  --cream: #efe6d2;
+  --cream-2: #c9bfae;
+  --display: "Rubik Dirt", "Arial Black", sans-serif;
+  --text: "Special Elite", "Courier New", monospace;
+  --gutter: clamp(1rem, 5vw, 4rem);
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--text); font-size: 1.12rem; line-height: 1.62; overflow-x: hidden; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+.wrap { max-width: 70rem; margin: 0 auto; padding: 0 var(--gutter); }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1; }
+p { margin: 0 0 1rem; }
+:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+/* Buttons are cut-out paper labels, like the letters on the cover */
+.tag { display: inline-block; padding: .55rem 1rem .5rem; background: var(--cream); color: var(--ink); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); text-decoration: none; font-family: var(--text); font-size: 1.08rem; line-height: 1.2; transform: rotate(-1.5deg); }
+.tag:nth-child(2n) { transform: rotate(1.2deg); }
+.tag:hover, .tag:focus-visible { background: var(--yellow); }
+.tag.hot { background: var(--pink); }
+.tag.hot:hover, .tag.hot:focus-visible { background: var(--yellow); }
+.tags { display: flex; flex-wrap: wrap; gap: .9rem 1.1rem; align-items: center; }
+.quiet { text-underline-offset: .25em; text-decoration-thickness: 1px; }
+.quiet:hover, .quiet:focus-visible { color: var(--yellow); }
+
+/* Who made this, before anything else */
+.top { position: absolute; z-index: 20; top: 0; left: 0; right: 0; }
+.made { margin: 0; padding: .45rem var(--gutter); background: var(--ink); color: var(--cream-2); font-size: .92rem; line-height: 1.35; text-align: center; }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem var(--gutter); }
+.mark { font-family: var(--display); font-size: 1.7rem; text-decoration: none; color: var(--cream); text-shadow: 0 2px 10px rgba(20, 16, 20, .7); }
+.bar nav { display: flex; gap: 1.3rem; }
+.bar nav a { text-decoration: none; background: var(--ink); padding: .1rem .45rem; }
+.bar nav a:hover, .bar nav a:focus-visible { color: var(--yellow); }
+
+/* Hero: we start pressed up against Tom mid-scream. Scroll and the camera pulls back to the
+   whole cover, and the title is pasted on one cut-out letter at a time, ransom-note style.
+   Every move is transform or opacity, written from one scroll handler. */
+.hero { position: relative; height: 100svh; min-height: 38rem; }
+.js .hero { height: 360svh; }
+.stage { position: sticky; top: 0; height: 100svh; min-height: 38rem; overflow: hidden; background: var(--ink); }
+.wall { position: absolute; inset: -2%; background: var(--ink) url(img/wall.jpg) center / cover; opacity: 0; transform-origin: 50% 42%; will-change: transform, opacity; }
+.book { position: absolute; left: 0; top: 0; width: 20rem; aspect-ratio: 1600 / 2500; transform-origin: 0 0; will-change: transform; }
+.book > img { width: 100%; height: 100%; }
+.book .shadow { position: absolute; inset: 0; box-shadow: 0 1.6rem 3.4rem rgba(0, 0, 0, .7); opacity: 0; will-change: opacity; }
+.book .l { position: absolute; width: auto; height: auto; will-change: transform, opacity; }
+
+.def { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 8svh; max-width: 36rem; will-change: transform, opacity; }
+.def p { margin: 0; }
+.def .word { display: inline-block; font-family: var(--display); font-size: clamp(3rem, 8vw, 5.6rem); line-height: 1; padding: .2rem .7rem .1rem; background: var(--cream); color: var(--ink); border: 3px solid var(--ink); transform: rotate(-2deg); }
+.def .noun { display: inline-block; margin: .7rem 0 .5rem; padding: .1rem .5rem; background: var(--ink); color: var(--yellow); font-size: 1.15rem; transform: rotate(1deg); }
+.def .means { display: inline; background: var(--cream); color: var(--ink); font-size: clamp(1.2rem, 2.4vw, 1.55rem); line-height: 1.7; padding: .15rem .4rem; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+
+.slot { position: absolute; visibility: hidden; aspect-ratio: 1600 / 2500; }
+.copy { position: absolute; will-change: transform, opacity; }
+.js .copy { opacity: 0; }
+html:not(.js) .def { display: none; }
+html:not(.js) .wall { opacity: 1; }
+.copy .series { color: var(--yellow); margin: 0 0 .5rem; }
+.copy h1 { font-size: clamp(3rem, 5.4vw, 5rem); color: var(--cream); margin-bottom: 1rem; }
+.copy .pitch { font-size: clamp(1.1rem, 1.6vw, 1.3rem); max-width: 30rem; margin-bottom: 1.6rem; }
+
+/* Calm sections */
+.band { padding: clamp(4.5rem, 10vw, 8rem) 0; }
+h2 { font-size: clamp(2.6rem, 5.6vw, 4.6rem); margin-bottom: 1.6rem; text-wrap: balance; }
+.books { background: var(--ink-2); }
+.title { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+.title + .title { margin-top: clamp(4rem, 8vw, 6rem); padding-top: clamp(3rem, 6vw, 4.5rem); border-top: 2px dashed rgba(239, 230, 210, .25); }
+.title img { box-shadow: 0 1.2rem 2.6rem rgba(0, 0, 0, .55); }
+.title h3 { font-size: clamp(2.2rem, 4vw, 3.2rem); margin-bottom: .4rem; }
+.title .when { color: var(--cyan); margin-bottom: 1.4rem; }
+.title.goth h3 { color: #8fdc5a; }
+.blurb { max-width: 38rem; }
+.blurb .ask { font-size: 1.3rem; color: var(--yellow); }
+.title.goth .ask { color: #8fdc5a; }
+.warn { font-size: .98rem; color: var(--cream-2); border-left: 3px solid var(--red); padding-left: .9rem; margin: 1.4rem 0 1.8rem; }
+
+.lines { background: var(--cream); color: var(--ink); position: relative; }
+.js .lines { height: 230svh; padding: 0; }
+.lines .pin { position: sticky; top: 0; min-height: 100svh; display: flex; align-items: center; padding: 5rem 0; }
+.js .lines .pin { height: 100svh; }
+.lines h2 { color: var(--ink); }
+.page { max-width: 46rem; margin: 0 0 2.4rem; }
+.page .strip { display: inline; background: var(--ink); color: var(--cream); font-size: clamp(1.25rem, 2.6vw, 1.85rem); line-height: 1.75; padding: .12rem .45rem; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.page .strip i { color: var(--yellow); }
+.page .s { display: inline-block; will-change: transform, opacity; }
+.js .page .s { opacity: 0; }
+.page cite { display: block; margin-top: .7rem; font-style: normal; font-size: 1rem; color: #6b5f63; }
+.page + .page { margin-left: clamp(0rem, 12vw, 10rem); }
+.page + .page .strip { background: var(--pink); color: var(--ink); }
+.page + .page .strip i { color: var(--ink); }
+.yalc { background: var(--pink); color: var(--ink); }
+.yalc h2 { color: var(--ink); }
+.yalc .grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.yalc .big { font-size: clamp(1.3rem, 2.3vw, 1.7rem); line-height: 1.45; }
+.yalc .table { display: inline-block; background: var(--ink); color: var(--yellow); padding: .2rem .6rem; transform: rotate(-1deg); }
+.merch { list-style: none; padding: 0; margin: 1.6rem 0 0; border-top: 2px solid var(--ink); }
+.merch li { display: flex; justify-content: space-between; gap: 1rem; padding: .7rem 0; border-bottom: 1px solid rgba(20, 16, 20, .4); }
+.merch li span:last-child { white-space: nowrap; }
+.yalc .pics img { border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); transform: rotate(2deg); }
+
+.about .grid { display: grid; grid-template-columns: minmax(0, 18rem) minmax(0, 36rem); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.about img { border: 3px solid var(--cream); transform: rotate(-2deg); }
+.about .s { font-family: var(--display); font-size: clamp(1.8rem, 3.2vw, 2.4rem); line-height: 1.1; color: var(--yellow); margin-bottom: 1.2rem; }
+
+footer { padding: 2.2rem 0 2.6rem; background: #0b090b; color: var(--cream-2); font-size: .98rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: .8rem 2rem; justify-content: space-between; }
+footer p { margin: 0; }
+
+@media (max-width: 760px) {
+  body { font-size: 1.05rem; }
+  .bar nav { gap: .6rem; font-size: .98rem; }
+  .bar nav .wide { display: none; }
+  .def { bottom: 6svh; }
+  .copy h1 { display: none; }
+  .copy .series { display: none; }
+  .copy .pitch { font-size: 1.02rem; margin-bottom: 1rem; text-align: center; }
+  .copy .tags { justify-content: center; }
+  .title, .yalc .grid, .about .grid { grid-template-columns: minmax(0, 1fr); }
+  .title img { max-width: 12rem; }
+  .about img { max-width: 13rem; }
+  .yalc .pics { max-width: 22rem; }
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <p class="made">A homepage idea made by Sparsh Saini for S. Edwards. Not their official site.</p>
+  <div class="bar">
+    <a class="mark" href="#">S. Edwards</a>
+    <nav aria-label="Main">
+      <a href="#books">Books</a>
+      <a class="wide" href="#about">About</a>
+      <a href="#yalc">YALC</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+<section class="hero" aria-label="Punkenness">
+  <div class="stage">
+    <div class="wall"></div>
+    <div class="slot" aria-hidden="true"></div>
+    <div class="book">
+      <img src="img/cover-base.jpg" alt="The Punkenness cover: Tom screaming over a turquoise guitar on a hot pink wall, a skeleton hand giving a thumbs up" width="1600" height="2500" fetchpriority="high">
+      <img class="l" src="img/l0.png" alt="" style="left:7.25%;top:16.16%;width:10.56%">
+      <img class="l" src="img/l1.png" alt="" style="left:17.81%;top:15.60%;width:9.06%">
+      <img class="l" src="img/l2.png" alt="" style="left:26.88%;top:14.76%;width:8.44%">
+      <img class="l" src="img/l3.png" alt="" style="left:35.31%;top:13.56%;width:8.44%">
+      <img class="l" src="img/l4.png" alt="" style="left:43.75%;top:14.12%;width:7.81%">
+      <img class="l" src="img/l5.png" alt="" style="left:51.56%;top:13.56%;width:7.50%">
+      <img class="l" src="img/l6.png" alt="" style="left:59.06%;top:13.56%;width:8.75%">
+      <img class="l" src="img/l7.png" alt="" style="left:67.81%;top:13.56%;width:7.81%">
+      <img class="l" src="img/l8.png" alt="" style="left:75.62%;top:12.96%;width:8.44%">
+      <img class="l" src="img/l9.png" alt="" style="left:84.06%;top:12.80%;width:9.81%">
+      <div class="shadow"></div>
+    </div>
+
+    <div class="def">
+      <p><span class="word">Punkenness</span></p>
+      <p><span class="noun">noun</span></p>
+      <p><span class="means">The feeling of intoxication derived from watching a phenomenal punk band perform live.</span></p>
+    </div>
+
+    <div class="copy">
+      <p class="series">SOS Book 1</p>
+      <h1>Punkenness</h1>
+      <p class="pitch">Tom has his future all planned out. Then a young punk with dazzling blue eyes is seated next to him in class.</p>
+      <div class="tags">
+        <a class="tag hot" href="https://www.sedwardsbooks.com/product-page/punkenness-paperback">Order the paperback</a>
+        <a class="tag" href="https://www.amazon.co.uk/dp/B0HJ9BW1QJ">Kindle</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band books" id="books">
+  <div class="wrap">
+    <h2>Goths, punks and rebels</h2>
+
+    <article class="title">
+      <img src="img/punkenness.jpg" alt="Punkenness by S. Edwards, SOS Book 1" width="640" height="1000" loading="lazy">
+      <div class="blurb">
+        <h3>Punkenness</h3>
+        <p class="when">SOS Book 1. Out now.</p>
+        <p>Tom has his future all planned out: first, he'll smash his A-Levels, then he'll read English at Oxford University and be a Booker Prize winning author by the time he turns 30.</p>
+        <p>But when a young punk with dazzling blue eyes and an aversion to education is seated next to him in class, an unlikely friendship blossoms.</p>
+        <p>Persuaded to tour the UK with his new friend's band over the summer, Tom experiences danger, true friendship and freedom for the first time, forcing him to question everything he knows about the world and his future in it.</p>
+        <p class="ask">For fans of Heartstopper and the cult classic film Almost Famous.</p>
+        <p class="warn">This book features recreational drug use. It is not recommended for young readers.</p>
+        <div class="tags">
+          <a class="tag hot" href="https://www.sedwardsbooks.com/product-page/punkenness-paperback">Paperback, £8.50</a>
+          <a class="tag" href="https://www.sedwardsbooks.com/product-page/punkenness-book-bundle">The bundle</a>
+          <a class="tag" href="https://www.amazon.co.uk/dp/B0HJ9BW1QJ">Kindle</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="title goth">
+      <img src="img/goth-girl.jpg" alt="Goth Girl by S. Edwards: a chalk-drawn whirlwind rising from a factory chimney" width="563" height="1000" loading="lazy">
+      <div class="blurb">
+        <h3>Goth Girl</h3>
+        <p class="ask">Would you fight for a second chance at first love?</p>
+        <p>At school Chris and Pippa were never friends. But a secret attraction kept them connected like a thread of invisible string.</p>
+        <p>Quiet, artistic and different in a way no one could quite put a finger on, Pippa was an easy target for bullies. Young and immature, Chris tried to help in the only way he knew how. He wishes he'd done more.</p>
+        <p>Five years later, Chris and Pippa meet again at university. The spark is still there. But Pippa is dealing with a different kind of bully, now. And she is dead-set on keeping them apart.</p>
+        <p class="warn">For readers aged 16 and above. Contains the loss of a family member, eating disorders and bullying.</p>
+        <div class="tags">
+          <a class="tag hot" href="https://www.sedwardsbooks.com/product-page/goth-girl-paperback">Paperback, £8.50</a>
+          <a class="tag" href="https://www.sedwardsbooks.com/product-page/goth-girl-book-launch-bundle">The bundle</a>
+          <a class="tag" href="https://www.amazon.co.uk/dp/B0FPDBRXYP">Kindle</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="band lines" id="lines" aria-label="Page one">
+  <div class="pin">
+    <div class="wrap">
+      <h2>Page one</h2>
+      <blockquote class="page">
+        <p><span class="s"><span class="strip">Is it actually possible</span></span> <span class="s"><span class="strip">to die of a broken heart?</span></span></p>
+        <cite>Goth Girl, the prologue</cite>
+      </blockquote>
+      <blockquote class="page">
+        <p><span class="s"><span class="strip">That familiar warmth was spreading</span></span> <span class="s"><span class="strip">up Tom's neck and face,</span></span> <span class="s"><span class="strip">making his cheeks glow a luminous red.</span></span> <span class="s"><span class="strip"><i>Come on Tom. You can do this.</i></span></span></p>
+        <cite>Punkenness, the prologue</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="band about" id="about">
+  <div class="wrap grid">
+    <img src="img/sarah.jpg" alt="Sarah, who writes as S. Edwards" width="600" height="690" loading="lazy">
+    <div>
+      <p class="s">The S stands for Sarah, and I'm very pleased to meet you.</p>
+      <p>I'm an indie author living in the Shropshire countryside with my husband and a steadily increasing number of cats.</p>
+      <p>I love alternative music, northern settings and stories that explore the human connection, whether that's romantic love, friendship or family bonds. My books always feature alternative characters: goths, punks and rebels.</p>
+      <div class="tags" style="margin-top:1.6rem">
+        <a class="tag" href="https://www.instagram.com/s.edwards.books/">Instagram</a>
+        <a class="tag" href="https://www.tiktok.com/@s.edwardsbooks">TikTok</a>
+        <a class="tag" href="https://www.goodreads.com/author/show/58979876.S_Edwards">Goodreads</a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="band yalc" id="yalc">
+  <div class="wrap grid">
+    <div>
+      <h2>Come and say hi at YALC</h2>
+      <p class="big">I'm at YALC London on 31 October and 1 November 2026, with the Indie Rebels at <span class="table">tables 45 and 46</span>.</p>
+      <p>And from my shop, for anyone who wants more than the book:</p>
+      <ul class="merch">
+        <li><span>Punkenness plectrums</span><span>£1.50</span></li>
+        <li><span>Bookish, Goth Girl and Punkenness stickers</span><span>75p</span></li>
+        <li><span>Grammar notebook and pen</span><span>£8</span></li>
+        <li><span>Pencil case and pen</span><span>£4</span></li>
+      </ul>
+      <p style="margin-top:1.6rem"><a class="tag" href="https://www.sedwardsbooks.com/category/all-products">Or shop online</a></p>
+    </div>
+    <div class="pics">
+      <img src="img/plectrums.jpg" alt="Three pink Punkenness plectrums on a wooden table" width="700" height="442" loading="lazy">
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>A mockup made by Sparsh Saini for S. Edwards. Not affiliated, not live. The covers, photos and words are the author's.</p>
+    <p><a class="quiet" href="#">Back to top</a></p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const hero = document.querySelector('.hero'), stage = hero.querySelector('.stage');
+  const book = hero.querySelector('.book'), slot = hero.querySelector('.slot');
+  const wall = hero.querySelector('.wall'), shadow = book.querySelector('.shadow');
+  const def = hero.querySelector('.def'), copy = hero.querySelector('.copy');
+  const letters = [...book.querySelectorAll('.l')];
+  const FACE = [.406, .39]; // Tom's open mouth, as a fraction of the cover
+  const clamp = v => Math.min(1, Math.max(0, v));
+  const ease = t => t * t * (3 - 2 * t);
+  const out3 = t => 1 - Math.pow(1 - t, 3);
+  const back = t => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Where each letter is thrown from: a fixed shuffle so every pass looks the same.
+  const THROW = [[-1.2, -.8, -24], [.4, -1.3, 18], [-.6, 1.1, -12], [1.1, -.5, 26], [-.2, -1.4, -30], [.9, 1.2, 14], [-1.3, .3, 22], [.5, -1, -18], [1.2, .7, -26], [-.8, -1.1, 20]];
+  let G = null;
+
+  const layout = () => {
+    const W = stage.clientWidth, H = stage.clientHeight, phone = W <= 760;
+    // the end place of the cover
+    let bw, bx, by;
+    if (phone) { const bh = Math.min(H * .47, (W - 80) * 1.5625); bw = bh / 1.5625; bx = (W - bw) / 2; by = Math.max(H * .13, 104); }
+    else { const bh = Math.min(H * .76, 46 * 16); bw = bh / 1.5625; bx = Math.max(W * .5 - bw - 40, W * .08); by = (H - bh) / 2 + H * .03; }
+    book.style.width = bw + 'px'; book.style.left = bx + 'px'; book.style.top = by + 'px';
+    if (phone) { copy.style.left = '1.2rem'; copy.style.right = '1.2rem'; copy.style.top = (by + bw * 1.5625 + 22) + 'px'; }
+    else { copy.style.left = (bx + bw + 64) + 'px'; copy.style.right = '3rem'; copy.style.top = '50%'; copy.style.marginTop = '-7rem'; }
+    // start: right up against Tom's face
+    const sw = Math.max(W * 1.6, H * 1.55), k0 = sw / bw;
+    G = { W, H, bw, bx, by, k0, sx: W * .5, sy: H * (phone ? .4 : .42) };
+  };
+
+  const render = p => {
+    if (!G) layout();
+    const { bw, bx, by, k0, sx, sy } = G, bh = bw * 1.5625;
+    const z = ease(clamp((p - .03) / .62));
+    const k = Math.exp(Math.log(k0) * (1 - z));
+    // the face moves from the middle of the screen to where it sits on the finished cover
+    const fx = sx + (bx + FACE[0] * bw - sx) * z, fy = sy + (by + FACE[1] * bh - sy) * z;
+    const tx = fx - bx - FACE[0] * bw * k, ty = fy - by - FACE[1] * bh * k;
+    book.style.transform = `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${k.toFixed(4)})`;
+    wall.style.opacity = ease(clamp((p - .2) / .3)).toFixed(3);
+    wall.style.transform = `scale(${(1.25 - .25 * z).toFixed(4)})`;
+    shadow.style.opacity = ease(clamp((p - .4) / .2)).toFixed(3);
+    const d = ease(clamp((p - .05) / .14));
+    def.style.opacity = (1 - d).toFixed(3);
+    def.style.transform = `translateY(${(-d * 3).toFixed(2)}rem)`;
+    // letters slap on one by one while the camera is still pulling back
+    letters.forEach((l, i) => {
+      const a = .26 + i * .038, t = clamp((p - a) / .08);
+      const [jx, jy, r] = THROW[i], m = 1 - out3(t);
+      const s = 1 + .9 * (1 - back(t));
+      l.style.opacity = clamp(t * 4).toFixed(3);
+      l.style.transform = `translate(${(jx * 60 * m).toFixed(1)}%,${(jy * 60 * m).toFixed(1)}%) rotate(${(r * m).toFixed(2)}deg) scale(${s.toFixed(4)})`;
+    });
+    const c = ease(clamp((p - .72) / .18));
+    copy.style.opacity = c.toFixed(3);
+    copy.style.transform = `translateY(${((1 - c) * 1.5).toFixed(2)}rem)`;
+  };
+
+  addEventListener('resize', () => { G = null; render(reduced ? 1 : prog()); });
+  const prog = () => { const run = hero.offsetHeight - innerHeight; return run > 0 ? clamp(-hero.getBoundingClientRect().top / run) : 1; };
+  // Page one: each strip of the first lines is slapped down in turn, like the title letters
+  const lines = document.querySelector('.lines'), strips = [...lines.querySelectorAll('.s')];
+  const TILT = [-2.5, 1.8, -1.2, 2.2, -1.8, 1.4];
+  const paste = q => strips.forEach((el, i) => {
+    const t = clamp((q - .08 - i * .13) / .1), m = 1 - out3(t);
+    el.style.opacity = clamp(t * 3).toFixed(3);
+    el.style.transform = `translate(${(m * (i % 2 ? 2 : -2)).toFixed(2)}rem,${(m * -1.2).toFixed(2)}rem) rotate(${(TILT[i] * (.4 + m)).toFixed(2)}deg) scale(${(1 + .25 * m).toFixed(4)})`;
+  });
+  if (reduced) { document.documentElement.classList.remove('js'); G = null; render(1); paste(1); return; }
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    // read everything first, then write
+    const p = prog(), r = lines.getBoundingClientRect(), run = lines.offsetHeight - innerHeight;
+    render(p);
+    if (r.top < innerHeight && r.bottom > 0) paste(run > 0 ? clamp(-r.top / run) : 1);
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>
